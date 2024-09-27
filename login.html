@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FSDCSE</title>
+</head>
+<body>
+
+    <form action="" method="GET">
+        <label for="user-name">User Name: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="text" name="user-name" id="user-name"><br>
+        <label for="user-pass">User Password: </label>
+        <input type="text" name="user-pass" id="user-pass">
+    </form>
+
+    <button id="GoHome">Go Home</button>
+    
+</body>
+<script>
+    document.getElementById("GoHome").addEventListener("click", () => {
+        window.location.replace("./index.html")
+    })
+</script>
+</html>
