@@ -1,0 +1,34 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.bulb-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.bulb {
+    position: relative;
+    width: 50px;
+    height: 100px;
+}
+
+.bulb img {
+    width: 100%;
+    transition: filter 0.3s;
+}
+
+.bulb input[type="checkbox"] {
+    position: absolute;
+    top: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.glow {
+    filter: brightness(2);
+}
