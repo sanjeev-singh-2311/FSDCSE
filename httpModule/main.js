@@ -4,6 +4,8 @@ import { promises } from "fs"
 const PORT = 8080
 
 const server = http.createServer(async (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, POST, GET')
     if (req.url === "/show" && req.method === "POST") {
         res.setHeader("Content-Type", "application/json")
         res.statusCode = 200
@@ -20,7 +22,7 @@ const server = http.createServer(async (req, res) => {
             return 0
         } catch {
             res.end()
-            return 0
+            return -1
         }
     }
     if (req.url === "/get_html" && req.method === "GET") {
@@ -31,7 +33,7 @@ const server = http.createServer(async (req, res) => {
             return 0
         } catch {
             res.end()
-            return 0
+            return -1
         }
     }
     res.setHeader("Content-Type", "text/html")
