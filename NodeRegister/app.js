@@ -31,9 +31,37 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify(db))
         return 0
     }
+    else if (req.url === "/login_user") {
+        res.setHeader("Content-Type", "application/json")
+        let body = "";
+        let post = "";
+        req.on("data", (data) => {
+            body += data
+
+            if (body.length > 1e6)
+                req.socket.destroy()
+        })
+        req.on("end", () => {
+            console.log(body)
+            post = JSON.parse(body)
+            const usr = db.find((e) => {
+                return e.name === post.name && e.password === post.password
+            })
+            if (usr === undefined) {
+                res.end("{message : 'User Not Found'}")
+                return 0;
+            }
+            res.end(JSON.stringify(usr));
+            return 0
+        })
+    }
+    else if (req.url === "/test") {
+        res.end("Hello world")
+        return 0;
+    }
 })
 
-server.listen(3000, async () => {
+server.listen(5308, "0.0.0.0", async () => {
     const promRead = await promises.readFile("db.txt", { encoding: "utf8" })
     if (promRead.length > 0)
         db = promRead.split("\n")
