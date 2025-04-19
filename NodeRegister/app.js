@@ -7,6 +7,10 @@ const server = http.createServer(async (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "*")
     res.setHeader("Access-Control-Allow-Methods", "*")
 
+
+    console.log("Request arrived")
+    console.log(req.url)
+    console.log(req.method)
     if (req.url === "/add_user" && req.method === "POST") {
         res.setHeader("Content-Type", "application/json")
         let body = "";
@@ -31,7 +35,7 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify(db))
         return 0
     }
-    else if (req.url === "/login_user") {
+    else if (req.url === "/auth_user") {
         res.setHeader("Content-Type", "application/json")
         let body = "";
         let post = "";
@@ -45,13 +49,14 @@ const server = http.createServer(async (req, res) => {
             console.log(body)
             post = JSON.parse(body)
             const usr = db.find((e) => {
-                return e.name === post.name && e.password === post.password
+                return (e.username === post.username) && (e.password === post.password)
             })
             if (usr === undefined) {
-                res.end("{message : 'User Not Found'}")
+                res.end(JSON.stringify({ message: 'User Not Found' }))
                 return 0;
             }
-            res.end(JSON.stringify(usr));
+            console.log("Auth success")
+            res.end(JSON.stringify({ ...usr, "message": "User found" }));
             return 0
         })
     }
@@ -63,17 +68,20 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(5308, "0.0.0.0", async () => {
     const promRead = await promises.readFile("db.txt", { encoding: "utf8" })
-    if (promRead.length > 0)
-        db = promRead.split("\n")
+    try {
+        db = JSON.parse(promRead)
+    } catch (_) {
+        db = []
+    }
+    console.log(db)
     console.log("Started")
 })
 process.on('SIGINT', async () => {
     console.log("Server shutting down...");
 
     try {
-        const writable = db.map((i) => JSON.stringify(i))
-        const toWrite = writable.join("\n");
-        await promises.writeFile("db.txt", toWrite, { encoding: "utf8" });
+        const writable = JSON.stringify(db);
+        await promises.writeFile("db.txt", writable, { encoding: "utf8" });
         console.log("Database saved successfully.");
     } catch (err) {
         console.error("Error writing db.txt:", err);
